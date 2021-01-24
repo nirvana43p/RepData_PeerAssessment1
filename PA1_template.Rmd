@@ -5,9 +5,26 @@ output:
     keep_md: true
 ---
 
+```{r computeTime, echo = FALSE}
+time <- format(Sys.time(),"%d %b %Y")
+```
+
+- Author : J. Ivan Avalos
+- date : `r time`
 
 ## Loading and preprocessing the data
+* Check if the zip file has been unzipped
+* Read activity.csv file
+* Cast date variable to Date format 
+```{r processingData, echo = TRUE, cache=TRUE}
+if(!file.exists("activity.csv")){
+    print("Unzipping the file")
+    unzip(zipfile = "activity.zip")}
 
+DFactivity <- read.csv("activity.csv",header = TRUE,na.strings = c("NA"))
+DFactivity$date <- strptime(DFactivity$date, "%Y-%m-%d")   
+head(DFactivity)
+```
 
 
 ## What is mean total number of steps taken per day?
