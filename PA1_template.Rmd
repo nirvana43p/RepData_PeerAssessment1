@@ -22,7 +22,6 @@ if(!file.exists("activity.csv")){
     unzip(zipfile = "activity.zip")}
 
 DFactivity <- read.csv("activity.csv",header = TRUE,na.strings = c("NA"))
-DFactivity$date <- strptime(DFactivity$date, "%Y-%m-%d")   
 head(DFactivity)
 ```
 
