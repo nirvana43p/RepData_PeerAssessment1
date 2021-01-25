@@ -15,8 +15,7 @@ time <- format(Sys.time(),"%d %b %Y")
 ## Loading and preprocessing the data
 * Check if the zip file has been unzipped
 * Read activity.csv file
-* Cast date variable to Date format 
-```{r processingData, echo = TRUE, cache=TRUE}
+```{r processingData, cache=TRUE}
 if(!file.exists("activity.csv")){
     print("Unzipping the file")
     unzip(zipfile = "activity.zip")}
@@ -27,8 +26,26 @@ head(DFactivity)
 
 
 ## What is mean total number of steps taken per day?
+* Use aggregate function to compute total steps by day
+* Histogram of total steps
+* Use aggregate function to compute mean and median steps by day
+* Compute mean and median of the total number of steps per day
+```{r noSteps}
+no.steps <- aggregate(steps ~ date, DFactivity, sum, na.rm = TRUE)
+```
+```{r plots1}
+hist(no.steps$steps, xlab = "Total number of steps per day", ylab = "Days",
+     main = "Histogram of steps taken each day", col = "green",
+     breaks = seq(0,25000,2000), ylim = c(0,20), xlim = c(0,25000))
+```
 
-
+Mean and median number of steps taken each day
+```{r MeanMedia}
+mean_Steps <- mean(no.steps$steps)
+mean_Steps
+median_Steps <- median(no.steps$steps)
+median_Steps
+```
 
 ## What is the average daily activity pattern?
 
