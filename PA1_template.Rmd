@@ -37,6 +37,7 @@ no.steps <- aggregate(steps ~ date, DFactivity, sum, na.rm = TRUE)
 hist(no.steps$steps, xlab = "Total number of steps per day", ylab = "Days",
      main = "Histogram of steps taken each day", col = "green",
      breaks = seq(0,25000,2000), ylim = c(0,20), xlim = c(0,25000))
+
 ```
 
 Mean and median number of steps taken each day
