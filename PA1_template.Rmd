@@ -68,7 +68,47 @@ maxInterSteps
 ```
 
 ## Imputing missing values
+* colSums to obtain how many missing values are
+* Fill missing data with mean of total number of steps per day 
+* Histograms of total steps with new filled data
+```{r missingValues}
+missing.values <- colSums(is.na(DFactivity))
+missing.values
 
-
+index.matched <- match(DFactivity$interval, interval.steps$interval)
+fillWithInterval <- interval.steps$steps[index.matched]
+DFactivity.filled <- transform(DFactivity, steps = ifelse(
+  is.na(DFactivity$steps), yes = fillWithInterval, no = DFactivity$steps))
+missing.values.filled <- colSums(is.na(DFactivity.filled))
+missing.values.filled
+```
+```{r plot3}
+no.steps.filled <- aggregate(steps ~ date, DFactivity.filled, sum)
+hist(no.steps.filled$steps, xlab = "Total number of steps per day", ylab = "Days",
+     main = "Histogram of steps taken each day", col = "green",
+     breaks = seq(0,25000,2000), ylim = c(0,25), xlim = c(0,25000))
+```
+Mean and median number of steps taken each day
+```{r MeanMedia.filled}
+mean_Steps <- mean(no.steps.filled$steps)
+mean_Steps
+median_Steps <- median(no.steps.filled$steps)
+median_Steps
+```
 
 ## Are there differences in activity patterns between weekdays and weekends?
+* Create a factor with is.Weekedn function, import chron library
+* Use aggregate function to compute the average number of steps taken every 5-minute interval for weeday and weekends
+* Make a panel plot
+```{r intervalSteps2}
+library(chron)
+DFactivity.filled <- transform(DFactivity.filled, date = as.Date(date))
+DFactivity.filled$isWeekend <- factor(is.weekend(DFactivity.filled$date))
+interval.steps_w <- aggregate(steps ~ interval + isWeekend, DFactivity.filled, mean)
+```
+```{r plot4}
+par(mfrow = c(2,1), mar = c(4,4,2,2),oma = c(0, 0, 3, 0))
+with(subset(interval.steps_w, isWeekend == TRUE), plot(interval, steps, type = "l", xlab = "interval - 5 minutes", ylab = "average across weekedns", col = "red"))
+with(subset(interval.steps_w, isWeekend == FALSE), plot(interval, steps, type = "l", xlab = "interval - 5 minutes", ylab = "average across weekdays", col = "blue"))
+mtext("Average number of steps per intervals", outer = TRUE)
+```
